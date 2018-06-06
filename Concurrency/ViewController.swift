@@ -125,7 +125,7 @@ class ViewController: UIViewController
     //-----------Downloading - operation queue with dependencies, UI - serial main queue-----------
     @IBAction func loadWithOperationQueueWithDependency(_ sender: UIButton)
     {
-        //P2, P3 is dependent on P1...P3 has high priority
+        //P1 dependent on P2, P2 dependent on P3
         let operationQueue = OperationQueue()
         
         let operation1 = BlockOperation {
@@ -151,8 +151,10 @@ class ViewController: UIViewController
                 self.imageView15.image = image
             }
         }
-        operation3.addDependency(operation1)
         operation3.completionBlock = { print("Operation-3 completed") }
+        
+        operation1.addDependency(operation2)
+        operation2.addDependency(operation3)
         
         operationQueue.addOperation(operation1)
         operationQueue.addOperation(operation2)
